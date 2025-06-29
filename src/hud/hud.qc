@@ -1,7 +1,3 @@
-#pragma PROGS_DAT  "../../hud.dat"
-
-#include "../../../src/client/api.h"
-
 font_s FONT_BIG;
 font_s FONT_WEAPONICON;
 font_s FONT_WEAPONNUM;
