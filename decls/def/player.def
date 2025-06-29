@@ -101,8 +101,8 @@ entityDef player
 	"act_aim_crouch_crossbow"		"71"
 	"act_attack_crouch_crossbow"		"71"
 
-	"snd_stepladderLeft"	"step_ladder.left"
-	"snd_stepladderRight"	"step_ladder.right"
+	"snd_stepladderLeft"	"Ladder.StepLeft"
+	"snd_stepladderRight"	"Ladder.StepRight"
 	"snd_fall"				"Player.FallDamage"
 	"snd_landHard"			"Player.LightFall"
 	"snd_death"				"Player.Death"
