@@ -28,9 +28,6 @@ entityDef monster_human_grunt
 	"attack_special_range"	"1024"
 	"projectile_delay"		"1.0"
 
-	// TODO					Unclear how these work
-	// TODO					!HG_CHECK
-	// TODO					!HG CLEAR
 	"talk_answer"			"!HG_ANSWER"
 	"talk_ask"				"!HG_QUEST"
 	"talk_idle"				"!HG_IDLE"
@@ -161,7 +158,7 @@ entityDef projectile_hgrunt_grenade
 	"snd_bounce"				"Weapon_HandGrenade.GrenadeBounce"
 }
 
-entityDef projectile_hgrunt_grenadePlant
+entityDef projectile_hgrunt_grenadePlant
 {
 	"inherit"					"projectile_hgrunt_grenade"
 	"velocity"					"15 0 128"

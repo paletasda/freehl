@@ -20,6 +20,10 @@ entityDef monster_headcrab
 	"snd_melee_attack_hit"	"Headcrab.Bite"
 	"leap_damage"			"skill:headcrab_dmg_bite"
 
+	"mindset_idle"			"headcrab_idle"
+	"mindset_combat"		"headcrab_combatFace"
+	"mindset_hunt"			"headcrab_searchEnemy"
+
 	events {
 		jump "AddVelocity" "512 0 250"
 		jump "StartSoundDef" "Headcrab.Attack"

@@ -157,6 +157,12 @@ Weapon_RPG.Single
 	sample weapons/rocketfire1.wav
 }
 
+Rocket.Fly
+{
+	alerts
+	sample weapons/rocket1.wav
+}
+
 Weapon_Shotgun.Single
 {
 	alerts

@@ -18,6 +18,11 @@ entityDef monster_houndeye
 	"snd_pain"				"HoundEye.Pain"
 	"snd_death"				"HoundEye.Die"
 
+	"mindset_idle"			"houndeye_idle"
+	"mindset_defense"		"houndeye_takeCover"
+	"mindset_combat"		"houndeye_combatFace"
+	"mindset_hunt"			"houndeye_searchPlayer"
+
 	events {
 		1 "StartSoundDef" "HoundEye.Alert"
 

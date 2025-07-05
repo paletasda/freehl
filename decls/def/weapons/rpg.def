@@ -61,7 +61,7 @@ entityDef projectile_rocket
 	"def_splash_damage"			"damage_rocketSplash"
 
 	"health"					"0"
-	"velocity"					"250"
+	"velocity"					"50 0 75"
 	"angular_velocity"			"0 0 200"
 	"fuse"						"10"
 	"detonate_on_fuse"			"0"
@@ -72,10 +72,11 @@ entityDef projectile_rocket
 	"impact_gib"				"1"
 
 	"thrust"					"2000"
-	"thrust_start"				"0.1"
+	"thrust_start"				"0.25"
 	"thrust_end"				"2"
 
 	"smoke_fly"					"weapon_rpg.trail"
+	"snd_fly"					"Rocket.Fly"
 	"decal_detonate"			"ExplosionScorch"
 	"model_detonate"			"fx_explosion.main"
 	"light_color"				"1 1 1"
@@ -88,7 +89,7 @@ entityDef projectile_rocket
 	"explode_light_fadetime"	"3"
 
 	"snd_explode"				"fx.explosion"
-	"offset"					"0 7 -3"
+	"offset"					"16 7 -3"
 }
 
 entityDef projectile_rocket_homing

@@ -60,8 +60,6 @@ entityDef projectile_satchel
 	"explode_light_color"		"1 0.5 0"
 	"explode_light_radius"		"1024"
 	"explode_light_fadetime"	"3"
-
-	
 }
 
 entityDef damage_satchelExplosion
@@ -77,6 +75,8 @@ entityDef fireInfo_satchel_primary
 	"fireRate"			"1.0"
 	"removeOnEmpty" 	"1"
 	"ammoRequired"		"1"
+	"model_player"		"models/p_satchel_radio.mdl"
+	"model_view"		"models/v_satchel_radio.mdl"
 }
 
 entityDef fireInfo_satchel_secondary

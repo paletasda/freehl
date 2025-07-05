@@ -44,9 +44,16 @@ entityDef monster_barney
 	"talk_stop_follow"		"!BA_STOP"
 	"talk_deny_follow"		"!BA_POK"
 
+	"mindset_idle"			"barney_idle"
+	"mindset_follow"		"barney_follow"
+	"mindset_defense"		"barney_takeCover"
+	"mindset_combat"		"barney_combatFace"
+	"mindset_hunt"			"barney_searchEnemy"
+
 	// pre-disaster
 	when "spawnflags" equals "256" {
 		"follow_on_use"		"0"
+		"mindset_follow"	"barney_followDeny"
 	}
 }
 

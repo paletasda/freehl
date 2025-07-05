@@ -41,16 +41,14 @@ entityDef weapon_hornetgun
 
 entityDef projectile_hornet
 {
-	"inherit" 	"ranged_agrunt_shot_orange
-"
+	"inherit" 	"ranged_agrunt_shot_orange"
 	"damage"	"10"
 	"offset"	"24 8 -16"
 }
 
 entityDef projectile_hornet_red
 {
-	"inherit" 	"ranged_agrunt_shot_red
-"
+	"inherit" 	"ranged_agrunt_shot_red"
 	"damage"	"10"
 	"offset"	"24 8 -16"
 }

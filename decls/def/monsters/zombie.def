@@ -32,6 +32,10 @@ entityDef monster_zombie
 	"snd_melee_attack"		"Zombie.Attack"
 	"snd_melee_attack_hit"	"Zombie.AttackHit"
 	"snd_melee_attack_miss"	"Zombie.AttackMiss"
+
+	"mindset_idle"			"zombie_idle"
+	"mindset_combat"		"zombie_combatFace"
+	"mindset_hunt"			"zombie_searchEnemy"
 }
 
 entityDef melee_zombie_stab

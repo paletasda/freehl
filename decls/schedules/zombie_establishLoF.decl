@@ -1,0 +1,8 @@
+typeInfo zombie_establishLoF
+{
+	"task_1"			"SetFailSchedule zombie_fail"
+	"task_2"			"TargetEnemy"
+	"task_4"			"WalkToTarget"
+	"task_5"			"WaitForMovement"
+	"task_6"			"PerformSchedule zombie_rangedAttack"
+}

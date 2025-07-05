@@ -10,12 +10,6 @@ entityDef monster_scientist
 	"team"					"0"
 	"propdata"				"actor_human"
 
-	// Until Randomization is functional
-	// we need to do this hack
-	"pitch"					"105"
-	"netname"				"Walter"
-	"body1"					"1"
-
 	"follow_on_use"			"1"
 	"speed_walk"			"64"
 	"speed_run"				"364"
@@ -43,6 +37,10 @@ entityDef monster_scientist
 	"talk_stop_follow"		"!SC_STOP"
 	"talk_deny_follow"		"!SC_POK"
 
+	"mindset_idle"			"scientist_idle"
+	"mindset_follow"		"scientist_follow"
+	"mindset_defense"		"scientist_panic"
+	
 	// Body Types
 	when "body" equals "0" {
 		"pitch"		"105"
@@ -76,5 +74,6 @@ entityDef monster_scientist
 		"talk_player_greet"	"!SC_PHELLO"
 		"talk_player_idle"	"!SC_PIDLE"
 		"follow_on_use"		"0"
+		"mindset_follow"	"scientist_followDeny"
 	}
 }

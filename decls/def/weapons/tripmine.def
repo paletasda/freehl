@@ -28,13 +28,10 @@ entityDef weapon_tripmine
 	"def_fireInfo"		"fireInfo_tripminePlant"
 
 	"inv_ammo_tripmine"	"1"
-	"ammoType"			"ammo_tripmine"
-	"ammoRequired"		"1"
 	"act_idle"			"$TRIPMINE_IDLE1,$TRIPMINE_IDLE2,$TRIPMINE_FIDGET"
 	"act_fire"			"$TRIPMINE_FIRE"
 	"act_draw"			"$TRIPMINE_DRAW"
 	"act_holster"		"$TRIPMINE_HOLSTER"
-	"removeOnEmpty"		"1"
 	"snd_fire"			"TripmineGrenade.Deploy"
 
 	// hlWeapon specific
@@ -49,6 +46,9 @@ entityDef fireInfo_tripminePlant
 	"def_onFire"		"projectile_tripmine"
 	"fireRate"			"0.5"
 	"testDistance"		"-64"
+	"ammoType"			"ammo_tripmine"
+	"ammoRequired"		"1"
+	"removeOnEmpty" 	"1"
 }
 
 entityDef projectile_tripmine
