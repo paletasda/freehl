@@ -117,19 +117,14 @@ entityDef projectile_shotgun_alt_mp
 
 entityDef fireInfo_shotgun_mp
 {
+	"inherit"		"fireInfo_shotgun"
 	"def_onFire"	"projectile_shotgun_mp"
-	"ammoPerShot"	"1"
-	"fireRate"		"0.75"
-	"punchAngle"	"-5 0 0"
 }
 
 entityDef fireInfo_altShotgun_mp
 {
+	"inherit"		"fireInfo_altShotgun"
 	"def_onFire"	"projectile_shotgun_alt_mp"
-	"ammoPerShot"	"2"
-	"fireRate"		"1.5"
-	"punchAngle"	"-10 0 0"
-	"act_fire"		"2"
 }
 
 entityDef weapon_shotgun_mp

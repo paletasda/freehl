@@ -5,5 +5,6 @@ typeInfo zombie_combatFace
 	"task_3"				"TurnToEnemy"
 	"task_4"				"PerformSchedule zombie_sweep"
 	"fail_onDeadEnemy"		"1"
-	"CanRangedAttack1"		"PerformSchedule zombie_meleeAttack"
+	"CanMeleeAttack1"	"PerformSchedule zombie_meleeAttack"
+	"CanRangedAttack1"	"PerformSchedule zombie_establishLoF"
 }

@@ -1,6 +1,6 @@
 mutliplayer
 {
-	when-cvar deathmatch equals 1
+	when-cvar g_gametype equals deathmatch
 	replace weapon_357 weapon_357_mp 
 	replace weapon_python weapon_357_mp 
 	replace weapon_9mmAR weapon_9mmAR_mp 
@@ -18,4 +18,14 @@ deprecated
 	replace ammo_9mmARclip ammo_9mmAR
 	replace ammo_glockclip ammo_9mmclip
 	replace ammo_mp5grenades ammo_ARgrenades
+}
+
+librequake
+{
+	replace monster_army monster_human_grunt
+	replace monster_demon1 monster_bullchicken
+	replace monster_tarbaby monster_headcrab
+	replace monster_wizard monster_alien_controller
+	replace monster_ogre monster_alien_grunt
+	replace monster_shambler monster_gargantua
 }

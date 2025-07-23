@@ -14,6 +14,141 @@
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
+#define HLHUD_SPRITES 61i
+int g_spriteSheets[HLHUD_SPRITES];
+int g_spriteAmmoIcon;
+int g_spriteCrosshair;
+
+typedef enum
+{
+S_AUTOAIM_C,
+S_BUCKET0,
+S_BUCKET1,
+S_BUCKET2,
+S_BUCKET3,
+S_BUCKET4,
+S_BUCKET5,
+S_CROSS,
+S_D_357,
+S_D_9MMAR,
+S_D_9MMHANDGUN,
+S_D_BOLT,
+S_D_CROSSBOW,
+S_D_CROWBAR,
+S_D_EGON,
+S_D_GAUSS,
+S_D_GRENADE,
+S_D_HORNET,
+S_D_RPG_ROCKET,
+S_D_SATCHEL,
+S_D_SHOTGUN,
+S_D_SKULL,
+S_D_SNARK,
+S_D_TRACKTRAIN,
+S_D_TRIPMINE,
+S_DIVIDER,
+S_DMG_BIO,
+S_DMG_CHEM,
+S_DMG_COLD,
+S_DMG_DROWN,
+S_DMG_GAS,
+S_DMG_HEAT,
+S_DMG_POISON,
+S_DMG_RAD,
+S_DMG_SHOCK,
+S_FLASH_BEAM,
+S_FLASH_EMPTY,
+S_FLASH_FULL,
+S_ITEM_BATTERY,
+S_ITEM_HEALTHKIT,
+S_ITEM_LONGJUMP,
+S_NUMBER_0,
+S_NUMBER_1,
+S_NUMBER_2,
+S_NUMBER_3,
+S_NUMBER_4,
+S_NUMBER_5,
+S_NUMBER_6,
+S_NUMBER_7,
+S_NUMBER_8,
+S_NUMBER_9,
+S_SELECTION,
+S_SUIT_EMPTY,
+S_SUIT_FULL,
+S_TITLE_HALF,
+S_TITLE_LIFE,
+S_TRAIN_BACK,
+S_TRAIN_FORWARD1,
+S_TRAIN_FORWARD2,
+S_TRAIN_FORWARD3,
+S_TRAIN_STOP
+} hlSprites_t;
+
+const string g_hlSpriteNames[HLHUD_SPRITES] =
+{
+"autoaim_c",
+"bucket0",
+"bucket1",
+"bucket2",
+"bucket3",
+"bucket4",
+"bucket5",
+"cross",
+"d_357",
+"d_9mmAR",
+"d_9mmhandgun",
+"d_bolt",
+"d_crossbow",
+"d_crowbar",
+"d_egon",
+"d_gauss",
+"d_grenade",
+"d_hornet",
+"d_rpg_rocket",
+"d_satchel",
+"d_shotgun",
+"d_skull",
+"d_snark",
+"d_tracktrain",
+"d_tripmine",
+"divider",
+"dmg_bio",
+"dmg_chem",
+"dmg_cold",
+"dmg_drown",
+"dmg_gas",
+"dmg_heat",
+"dmg_poison",
+"dmg_rad",
+"dmg_shock",
+"flash_beam",
+"flash_empty",
+"flash_full",
+"item_battery",
+"item_healthkit",
+"item_longjump",
+"number_0",
+"number_1",
+"number_2",
+"number_3",
+"number_4",
+"number_5",
+"number_6",
+"number_7",
+"number_8",
+"number_9",
+"selection",
+"suit_empty",
+"suit_full",
+"title_half",
+"title_life",
+"train_back",
+"train_forward1",
+"train_forward2",
+"train_forward3",
+"train_stop"
+};
+
 enumflags
 {
 	HUDCOUNTER_CHANGED_ORIGIN,
@@ -225,6 +360,33 @@ hlHUDCounter::ReceiveEntity(float flNew, float flChanged)
 }
 
 void
+HLHUD_DrawNumber(int iNumber, vector vecPos, float fAlpha, vector vColor)
+{
+	atlasPic.Draw_RGBA(
+		g_spriteSheets[S_NUMBER_0 + iNumber],
+		vecPos,
+		vColor,
+		fAlpha,
+		true
+	);
+}
+
+void
+HLHUD_DrawNums(float fNumber, vector vecPos, float fAlpha, vector vColor)
+{
+	int iNumber = fNumber;
+	if (iNumber > 0) {
+		while (iNumber > 0) {
+			HLHUD_DrawNumber((float)iNumber % 10, vecPos, fAlpha, vColor);
+			iNumber = iNumber / 10;
+			vecPos[0] -= 20;
+		} 
+	} else {
+		HLHUD_DrawNumber(0, vecPos, fAlpha, vColor);
+	}
+}
+
+void
 hlHUDCounter::postdraw(void)
 {
 	if (!m_bEnabled) {
@@ -260,6 +422,6 @@ hlHUDCounter::postdraw(void)
 
 	/* counter */
 	projectedPos = vecProj + [64, 12];
-	//HUD_DrawNums((float)m_counterValue, projectedPos, 1.0, colormod / 255);
+	HLHUD_DrawNums((float)m_counterValue, projectedPos, 1.0, colormod / 255);
 }
 #endif

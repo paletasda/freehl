@@ -1,3 +1,6 @@
+
+
+
 void
 HLHUD_AmmoNotify_Draw(__inout vector pos)
 {
@@ -32,7 +35,7 @@ HLHUD_AmmoNotify_Draw(__inout vector pos)
 		drawfont = 0;
 		string txt = sprintf("%i", g_ammonotify[i].count);
 		float offs = stringwidth(txt, FALSE, [20,20]);
-		draw.Text_RGBA(pos + [-offs - 8,4], sprintf("%i", g_ammonotify[i].count), g_fg_color, a, FONT_BIG);
+		draw.Text_RGBA(pos + [-offs - 8,4], sprintf("%i", g_ammonotify[i].count), g_fg_color, a, FONT_20);
 
 		g_ammonotify[i].alpha -= (clframetime * 0.5);
 	}
@@ -137,7 +140,7 @@ HLHUD_ItemNotify_Draw(__inout vector pos)
 		string txt = sprintf("%i", g_itemnotify[i].count);
 		float offs = stringwidth(txt, FALSE, [20,20]) + 16;
 
-		draw.Text_RGBA(pos + [-offs - 8,12], sprintf("%i", g_itemnotify[i].count), g_fg_color, a, FONT_BIG);
+		draw.Text_RGBA(pos + [-offs - 8,12], sprintf("%i", g_itemnotify[i].count), g_fg_color, a, FONT_20);
 		}
 
 		g_itemnotify[i].alpha -= (clframetime * 0.5);
@@ -216,25 +219,30 @@ HLHUD_BigNums(vector pos, string numString, float alpha)
 {
 	if (alpha > g_fg_alpha) {
 		float backAlpha = bound(0.0f, alpha - g_fg_alpha, 1.0f);
-		draw.Text_RGBA(pos + [random(-2,2), 0], numString, g_fg_color, backAlpha, FONT_WEAPONNUMB);
-		draw.Text_RGBA(pos, numString, g_fg_color, alpha, FONT_BIG);
+		draw.Text_RGBA(pos + [random(-2,2), 0], numString, g_fg_color, backAlpha, FONT_20);
+		draw.Text_RGBA(pos, numString, g_fg_color, alpha, FONT_20);
 	} else
-		draw.Text_RGBA(pos, numString, g_fg_color, alpha, FONT_BIG);
+		draw.Text_RGBA(pos, numString, g_fg_color, alpha, FONT_20);
 }
-
 
 void
 HUD_Init(void)
 {
+	for (int i = 0; i < 61i; i++) {
+		g_spriteSheets[i] = atlasPic.Load(g_hlSpriteNames[i]);
+	}
+
 	weaponSelectionHUD = spawn(HLWeaponSelect);
 }
 
 void
 HUD_ReloadVideoResources(void)
 {
+	font.Load("fonts/font20.font", FONT_20);
+	font.Load("fonts/chat.font", FONT_CHAT);
+
 #if 0
-	font.Load("fonts/chat.font", FONT_SMALL);
-	font.Load("fonts/font20.font", FONT_BIG);
+	font.Load("fonts/chat.font", FONT_20);
 	font.Load("fonts/weaponicon.font", FONT_WEAPONICON);
 	font.Load("fonts/weaponicon_sel.font", FONT_WEAPONICON_SEL);
 	font.Load("fonts/weapontext.font", FONT_WEAPONTEXT);
@@ -262,14 +270,12 @@ HUD_ReloadVideoResources(void)
 void
 HLHUD_DrawNumber(int iNumber, vector vecPos, float fAlpha, vector vColor)
 {
-	draw.SubPic(vecPos,
-		[24,24],
-		g_hud7_spr,
-		[spr_hudnum[iNumber], 0],
-		[NUMSIZE_X, NUMSIZE_Y],
-		vColor,
-		fAlpha,
-		DRAWFLAG_ADDITIVE
+	atlasPic.Draw_RGBA(
+		g_spriteSheets[S_NUMBER_0 + iNumber],
+		vecPos,
+		vColor * fAlpha,
+		g_fg_alphaScale, 
+		true
 	);
 }
 
@@ -292,27 +298,21 @@ void
 HLHUD_DrawHealth(vector pos, float healthValue)
 {
 	if (healthValue > 25) {
-		draw.SubPic(
+		atlasPic.Draw_RGBA(
+			g_spriteSheets[S_CROSS],
 			pos + [-72,-4],
-			[32,32],
-			g_hud7_spr,
-			[spr_health[0], spr_health[1]],
-			[spr_health[2], spr_health[3]],
-			g_fg_color,
-			g_healthAlpha,
-			DRAWFLAG_ADDITIVE
+			g_fg_color * g_healthAlpha,
+			g_fg_alphaScale, 
+			true
 		);
 		HLHUD_DrawNums(healthValue, pos, g_healthAlpha, g_fg_color);
 	} else {
-		draw.SubPic(
+		atlasPic.Draw_RGBA(
+			g_spriteSheets[S_CROSS],
 			pos + [-72,-4],
-			[32,32],
-			g_hud7_spr,
-			[spr_health[0], spr_health[1]],
-			[spr_health[2], spr_health[3]],
 			[1,0,0],
-			g_healthAlpha,
-			DRAWFLAG_ADDITIVE
+			g_fg_alphaScale, 
+			true
 		);
 		HLHUD_DrawNums(healthValue, pos, g_healthAlpha, [1,0,0]);
 	}
@@ -321,28 +321,24 @@ HLHUD_DrawHealth(vector pos, float healthValue)
 void
 HLHUD_DrawArmor(vector pos, float armorValue)
 {
-	draw.SubPic(
+	atlasPic.Draw_RGBA(
+		g_spriteSheets[S_SUIT_EMPTY],
 		pos + [-80,-9],
-		[40,40],
-		g_hud7_spr,
-		[spr_suit2[0], spr_suit2[1]],
-		[spr_suit2[2], spr_suit2[3]],
-		g_fg_color,
-		g_armorAlpha,
-		DRAWFLAG_ADDITIVE
+		g_fg_color * g_armorAlpha,
+		g_fg_alphaScale, 
+		true
 	);
 
 	if (armorValue > 0) {
 		float perc = bound(0, (armorValue / 100), 1.0);
-		draw.SubPic(
-			pos + [-80,-9] + [0, 40 * (1.0-perc)],
-			[40, 40 * perc],
-			g_hud7_spr,
-			[spr_suit1[0],spr_suit1[1] + spr_suit1[3] * (1.0-perc)],
-			[spr_suit1[2], spr_suit1[3] * perc],
-			g_fg_color,
-			g_armorAlpha,
-			DRAWFLAG_ADDITIVE
+
+		atlasPic.DrawBottom_RGBA(
+			g_spriteSheets[S_SUIT_FULL],
+			pos + [-80,-9],
+			perc,
+			g_fg_color * g_armorAlpha,
+			g_fg_alphaScale, 
+			true
 		);
 	}
 
@@ -350,16 +346,108 @@ HLHUD_DrawArmor(vector pos, float armorValue)
 }
 
 void
-HUD_DrawSeperator(vector pos)
+HLHUD_DrawFlashlight(vector pos, float sprintValue)
 {
-	draw.SubPic(pos,
-		[2,24],
-		g_hud7_spr,
-		[240/256, 0],
-		[2/256, 24/128],
-		g_fg_color,
-		HUD_ALPHA,
-		DRAWFLAG_ADDITIVE
+	atlasPic.Draw_RGBA(
+		g_spriteSheets[S_FLASH_EMPTY],
+		pos,
+		g_fg_color * g_armorAlpha,
+		g_fg_alphaScale, 
+		true
+	);
+
+	if (sprintValue > 0) {
+		atlasPic.DrawLeft_RGBA(
+			g_spriteSheets[S_FLASH_FULL],
+			pos,
+			sprintValue,
+			g_fg_color * g_armorAlpha,
+			g_fg_alphaScale, 
+			true
+		);
+	}
+
+	if (player.IsSprinting()) {
+		atlasPic.DrawLeft_RGBA(
+			g_spriteSheets[S_FLASH_FULL],
+			pos,
+			sprintValue,
+			g_fg_color * g_armorAlpha,
+			g_fg_alphaScale, 
+			true
+		);
+
+		atlasPic.Draw_RGBA(
+			g_spriteSheets[S_FLASH_BEAM],
+			pos + [32, 0],
+			g_fg_color * g_armorAlpha,
+			g_fg_alphaScale, 
+			true
+		);
+	}
+}
+
+void
+HLHUD_DrawObituaries(vector drawAtPos, bool rightAlign)
+{
+	if (g_killMsgTime < time && g_killMsgCount > 0i) {
+		for (int i = 0i; i < (KILLMESSAGE_LIMIT-1i); i++) {
+			g_killMsgRecord[i].m_target = g_killMsgRecord[i+1].m_target;
+			g_killMsgRecord[i].m_attacker = g_killMsgRecord[i+1].m_attacker;
+			g_killMsgRecord[i].m_icon = g_killMsgRecord[i+1].m_icon;
+		}
+
+		g_killMsgRecord[KILLMESSAGE_LIMIT-1].m_target = "";
+		g_killMsgRecord[KILLMESSAGE_LIMIT-1].m_attacker = "";
+		g_killMsgRecord[KILLMESSAGE_LIMIT-1].m_icon = -1;
+
+		g_killMsgTime = time + KILLMESSAGE_TIME;
+		g_killMsgCount--;
+	}
+
+	if (g_killMsgCount <= 0i) {
+		return;
+	}
+
+	for (int i = 0i; i < g_killMsgCount; i++) {
+		float m_ofs1 = font.StringWidth(g_killMsgRecord[i].m_target, true, FONT_CHAT);
+		float m_ofs2 = atlasPic.GetWidth(g_killMsgRecord[i].m_icon);
+		float m_padding = 8.0f;
+
+		if (rightAlign == true) {
+			draw.RText(drawAtPos, g_killMsgRecord[i].m_target, FONT_CHAT);
+			atlasPic.Draw_RGBA(
+				g_killMsgRecord[i].m_icon,
+				[drawAtPos[0] - (m_ofs1 + m_padding + m_ofs2), drawAtPos[1]],
+				g_fg_color * HUD_ALPHA,
+				g_fg_alphaScale, 
+				true
+			);
+			draw.RText([drawAtPos[0] - (m_ofs1 + m_padding + m_ofs2 + m_padding), drawAtPos[1]], g_killMsgRecord[i].m_attacker, FONT_CHAT);
+		} else {
+			draw.Text(drawAtPos, g_killMsgRecord[i].m_target, FONT_CHAT);
+			atlasPic.Draw_RGBA(
+				g_killMsgRecord[i].m_icon,
+				drawAtPos,
+				g_fg_color * HUD_ALPHA,
+				g_fg_alphaScale, 
+				true
+			);
+			draw.Text(drawAtPos, g_killMsgRecord[i].m_attacker, FONT_CHAT);
+		}
+		drawAtPos[1] += font.GetHeight(FONT_CHAT) + m_padding;
+	}
+}
+
+void
+HUD_DrawSeperator(vector vecPos)
+{
+	atlasPic.Draw_RGBA(
+		g_spriteSheets[S_DIVIDER],
+		vecPos - [0, 7],
+		g_fg_color * HUD_ALPHA,
+		g_fg_alphaScale, 
+		true
 	);
 }
 
@@ -399,10 +487,7 @@ HUD_Draw(void)
 	g_hudRes = hud_size = screen.HUDSize();
 
 	HLHUD_UpdateTimers(healthValue, armorValue, clipValue, ammoValue, ammoValue2);
-
 	HLHUD_DamageNotifyDraw(hud_mins, hud_size);
-
-
 
 	if (1) {
 		pos = g_hudMins + [g_hudRes[0] - 192, g_hudRes[1] - 128];
@@ -411,6 +496,7 @@ HUD_Draw(void)
 		HLHUD_AmmoNotify_Draw(pos);
 	}
 
+	HLHUD_DrawObituaries([g_hudRes[0] - 16, 48], true);
 
 	if (g_damageAlpha > 0.0f) {
 		vector center;
@@ -461,45 +547,19 @@ HUD_Draw(void)
 		g_damageAlpha -= clframetime;
 	}
 
-	/* sprinting overlay  */
-	if (staminaValue < 1.0f) {
-		pos = hud_mins + [16, hud_size[1] - 90];
-
-		if (player.IsSprinting()) {
-			pos = hud_mins + [16, hud_size[1] - 90];
-			draw.RoundedBox(pos, [102, 36], [0,0,0], 76/255);
-			draw.Text_RGBA(pos + [8, 24], "SPRINT", g_fg_color, 1.0f, FONT_VERDANA);
-		} else {
-			pos = hud_mins + [16, hud_size[1] - 80];
-			draw.RoundedBox(pos, [102, 26], [0,0,0], 76/255);
-		}
-
-		draw.Text_RGBA(pos + [8, 5], "AUX POWER", g_fg_color, 1.0f, FONT_VERDANA);
-
-
-		for (float f = 0.0f; f <= 1.0f; f += 0.1f) {
-			if (f < staminaValue)
-				draw.Rect(pos + [8,15], [6, 4], g_fg_color, 1.0f);
-			else
-				draw.Rect(pos + [8,15], [6, 4], g_fg_color, g_fg_alpha);
-
-			pos[0] += 9;
-		}
-
-	} else {
-		if (teams.TeamCount() > 0i) {
-			pos = hud_mins + [16, hud_size[1] - 65];
-			draw.RoundedBox(pos, [66, 16], [0,0,0], 76/255);
-			draw.Text_RGBA(pos + [8, 5], strcat("Team ", teams.Name(teamID)), teams.Color(teamID), 1.0f, FONT_VERDANA);
-		}
-	}
-
 	pos = hud_mins + [88, hud_size[1] - 42];
 	HLHUD_DrawHealth(pos, healthValue); 
 	pos = hud_mins + [198, hud_size[1] - 42];
 	HLHUD_DrawArmor(pos, armorValue);
 
 	weaponSelectionHUD.Draw();
+
+	if (g_spriteCrosshair != -1i) {
+		atlasPic.DrawCrosshair(g_spriteCrosshair);
+	}
+
+	pos = hud_mins + [hud_size[0] - 52, 16];
+	HLHUD_DrawFlashlight(pos, staminaValue);
 
 	if (weapon.AmmoRequired() == false) {
 		HLHUD_ClampTimers();
@@ -512,9 +572,17 @@ HUD_Draw(void)
 	if (weapon.UsesSecondaryAmmo() == true) {
 		pos = hud_mins + [hud_size[0] - 72, hud_size[1] - 74];
 		HLHUD_DrawAmmo3(pos, ammoValue2);
-	} else {
-		pos = hud_mins + [hud_size[0] - 102 - 16, hud_size[1] - 48];
 	}
+
+	pos = hud_mins + [hud_size[0] - 48, hud_size[1] - 42];
+
+	atlasPic.Draw_RGBA(
+		g_spriteAmmoIcon,
+		pos,
+		g_fg_color,
+		g_fg_alphaScale,
+		true
+	);
 
 	if (weapon.GetClipSize() > 0) {
 		pos = hud_mins + [hud_size[0] - 152, hud_size[1] - 42];
@@ -536,7 +604,8 @@ HUD_DrawSpectator(vector hud_mins, vector hud_size)
 void
 HUD_WeaponSwitched(string weaponName)
 {
-	//g_ammoPic = entityDef.GetKeyValue(weaponName, "ammoIcon");
+	g_spriteAmmoIcon = atlasPic.Load(strcat(weaponName, ".ammo"));
+	g_spriteCrosshair = atlasPic.Load(strcat(weaponName, ".crosshair"));
 	g_ammoDisplayAlpha = 1.0f;
 }
 
@@ -710,4 +779,45 @@ HUD_AmmoChanged(int ammoType, int absoluteValue, int deltaValue)
 		HLHUD_AmmoNotify_Insert(16, deltaValue);
 		break;
 	}
+}
+
+void
+HUD_Obituary(string targetName, string attackerName, string weaponDef, string meansOfDeath)
+{
+	static void HUD_Obituary_Add(int id, string targetName, string attackerName, string weaponDef, string meansOfDeath) {
+		string killIcon = entityDef.GetString(weaponDef, "killIcon");
+
+		g_killMsgRecord[id].m_target = targetName;
+
+		if (wordInString(meansOfDeath, "self") == false) {
+			g_killMsgRecord[id].m_attacker = attackerName;
+		} else {
+			g_killMsgRecord[id].m_attacker = "";
+		}
+
+		if (STRING_SET(killIcon)) {
+			g_killMsgRecord[id].m_icon = atlasPic.Load(killIcon);
+		} else {
+			if (wordInString(meansOfDeath, "vehicle") == true) {
+				g_killMsgRecord[id].m_icon = g_spriteSheets[S_D_TRACKTRAIN];
+			} else {
+				g_killMsgRecord[id].m_icon = g_spriteSheets[S_D_SKULL];
+			}
+		}
+	}
+
+	if (g_killMsgCount < KILLMESSAGE_LIMIT) {
+		HUD_Obituary_Add(g_killMsgCount, targetName, attackerName, weaponDef, meansOfDeath);
+		g_killMsgCount++;
+	} else {
+		for (int i = 0i; i < (KILLMESSAGE_LIMIT-1); i++) {
+			g_killMsgRecord[i].m_target = g_killMsgRecord[i+1].m_target;
+			g_killMsgRecord[i].m_attacker = g_killMsgRecord[i+1].m_attacker;
+			g_killMsgRecord[i].m_icon = g_killMsgRecord[i+1].m_icon;
+		}
+
+		HUD_Obituary_Add(KILLMESSAGE_LIMIT-1, targetName, attackerName, weaponDef, meansOfDeath);
+	}
+
+	g_killMsgTime = time + KILLMESSAGE_TIME;
 }

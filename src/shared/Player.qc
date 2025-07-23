@@ -22,16 +22,15 @@ class hlPlayer:ncPlayer
 
 	virtual void Physics_Jump(void);
 
+	virtual void Physics_InputSprint(void);
+
 #ifdef CLIENT
 	virtual void UpdatePlayerAttachments(bool);
-	virtual void ReceiveEntity(float,float);
 	virtual void PredictPreFrame(void);
 	virtual void PredictPostFrame(void);
 	virtual void UpdateAliveCam(void);
 #else
 	virtual void Death(entity, entity, int, vector, vector, int);
-	virtual void EvaluateEntity(void);
-	virtual float SendEntity(entity, float);
 	virtual void Save(float);
 	virtual void Restore(string,string);
 #endif
@@ -170,30 +169,6 @@ hlPlayer::UpdatePlayerAttachments(bool visible)
 
 /*
 =================
-hlPlayer::ReceiveEntity
-=================
-*/
-void
-hlPlayer::ReceiveEntity(float new, float flChanged)
-{
-	/* the generic client attributes */
-	super::ReceiveEntity(new, flChanged);
-
-	setorigin(this, origin);
-
-	/* these only concern the current hlPlayer */
-	CSQC_UpdateSeat();
-	if (this != pSeat->m_ePlayer)
-		return;
-
-	/* do not notify us of updates when spawning initially */
-	if (flChanged == UPDATE_ALL) {
-		PredictPreFrame();
-	}
-}
-
-/*
-=================
 hlPlayer::PredictPostFrame
 
 Save the last valid server values away in the _net variants of each field
@@ -237,13 +212,6 @@ hlPlayer::Restore(string strKey, string strValue)
 	}
 }
 
-void
-hlPlayer::EvaluateEntity(void)
-{
-	/* the generic client attributes */
-	ncPlayer::EvaluateEntity();
-
-}
 
 void
 hlPlayer::Death(entity inflictor, entity attacker, int damagePoints, vector dir, vector absImpactPos, int hitBody)
@@ -285,32 +253,29 @@ hlPlayer::Death(entity inflictor, entity attacker, int damagePoints, vector dir,
 	super::Death(inflictor,  attacker,  damagePoints,  dir, absImpactPos, hitBody);
 }
 
-/*
-=================
-hlPlayer::SendEntity
-=================
-*/
-float
-hlPlayer::SendEntity(entity ePEnt, float flChanged)
-{
-	/* just-in-case. */
-	if (IsPlayer() == false)
-		return (0);
 
-	/* don't broadcast invisible hlPlayers */
-	if (IsFakeSpectator() && ePEnt != this)
-		return (0);
-	if (!GetModelindex() && ePEnt != this)
-		return (0);
-
-	flChanged = OptimiseChangedFlags(ePEnt, flChanged);
-
-	/* the generic client attributes */
-	ncPlayer::SendEntity(ePEnt, flChanged);
-
-	return (1);
-}
 #endif
+
+void
+hlPlayer::Physics_InputSprint(void)
+{
+	/* no sprinting... only battery. */
+	if (gflags & GF_FLASHLIGHT) {
+		m_currentStamina += input_timelength;
+		AddVFlags(VFL_SPRINTING);
+	} else {
+		float toSubtract = input_timelength;
+		toSubtract *= m_pmoveVars.pm_staminarate;
+		m_currentStamina = max(0, m_currentStamina - toSubtract);
+		RemoveVFlags(VFL_SPRINTING);
+	}
+
+	/* turn the flashlight off when empty */
+	if (m_currentStamina > m_pmoveVars.pm_stamina) {
+		m_currentStamina = m_pmoveVars.pm_stamina;
+		gflags &= ~GF_FLASHLIGHT;
+	}
+}
 
 void
 hlPlayer::Physics_Jump(void)

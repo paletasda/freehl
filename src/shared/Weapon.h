@@ -52,13 +52,9 @@ public:
 
 private:
 #ifdef CLIENT
-	int m_iHudSlot;
-	int m_iHudSlotPos;
 	string m_ammoIcon;
 	string m_ammo2Icon;
 	string m_crossHair;
-	string m_icon;
-	string m_iconSel;
 	ncWeapon m_nextWeapon;
 #endif
 	bool m_bAltModeLaser;

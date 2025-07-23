@@ -178,7 +178,10 @@ CodeCallback_PlayerKilled(entity playerEntity, entity inflictor, entity attacker
 {
 	int fragLimit = cvars.GetInteger("fraglimit");
 
-	combat.Obituary(playerEntity.netname, attacker.netname, weapon, "");
+	if (playerEntity == attacker)
+		combat.Obituary(playerEntity.netname, attacker.netname, weapon, "self");
+	else
+		combat.Obituary(playerEntity.netname, attacker.netname, weapon, "");
 
 	/* death-counter */
 	playerEntity.deaths++;

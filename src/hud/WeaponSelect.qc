@@ -14,6 +14,9 @@
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+var float autocvar_hlhud_weaponIconAlpha = 0.75;
+var float autocvar_hlhud_weaponIconSelectedAlpha = 1.0f;
+
 void
 HLWeaponSelect::HLWeaponSelect(void)
 {
@@ -61,9 +64,29 @@ HLWeaponSelect::Trigger(void)
 void
 HLWeaponSelect::Deactivate(void)
 {
+	if (m_selectedWeapon == __NULL__) {
+		return;
+	}
+
 	m_selectedWeapon = __NULL__;
 	m_flHUDWeaponSelectTime = 0.0f;
 	Event_Closed();
+}
+
+void
+HLWeaponSelect::DrawBar(vector drawAtPos, float percentageAmount)
+{
+	vector colorLerp;
+	float barWidth;
+
+	draw.Rect(drawAtPos + [10,0], [20,4], g_fg_color, 1.0f);
+
+	barWidth = bound(1, 20 * percentageAmount, 20);
+	colorLerp[0] = lerp(1.0, 0.0f, percentageAmount);
+	colorLerp[1] = lerp(0.0, 1.0f, percentageAmount);
+	colorLerp[2] = lerp(0.0, 0.0f, percentageAmount);
+
+	draw.Rect(drawAtPos + [10,0], [barWidth,4], colorLerp, 1.0f);
 }
 
 void
@@ -88,9 +111,13 @@ HLWeaponSelect::Draw(void)
 	/* since we have something in the inventory, start there */
 	linkedList = m_firstWeapon;
 
+#if 0
 	float totalWidth = 120;
 	totalWidth += (weapon.GetSlot(m_lastWeapon) * 40);
 	vecPos = hudMins + [hudRes[0] / 2 - (totalWidth / 2),16];
+#else
+	vecPos = hudMins + [16,16];
+#endif
 
 	/* iterate through the inventory*/
 	while (linkedList) {
@@ -102,41 +129,38 @@ HLWeaponSelect::Draw(void)
 			if (lastSlot != currentSlot) {
 				/* new slot, new offset */
 				if (lastSlot == m_iWantSlot) {
-					vecPos[0] += 120;
+					vecPos[0] += 175;
 				} else {
-					vecPos[0] += 40;
+					vecPos[0] += 25;
 				}
 
 				/* quick hack to re-adjust */
 				if (lastSlot == -1) {
+#if 0
 					vecPos[0] = hudMins[0] + (hudRes[0] / 2 - (totalWidth / 2));
+#else
+					vecPos = hudMins + [16,16];
+#endif
 				}
 
 				/* slot number icon at the top */
-				vecPos[1] = hudMins[1] + 16;
+				vecPos[1] = hudMins[1] + 25;
 
-			}
-
-			/* current slot = big bg rect, for every item */
-			if (m_iWantSlot == currentSlot) {
-				draw.RoundedBox(vecPos, [112, 80], [0,0,0], g_fg_alpha);
-			} else {
-				//
 			}
 
 			/* new slot started */
 			if (lastSlot != currentSlot) {
 				/* every slot number is accompanied by their own tiny bg rect */
 				if (m_iWantSlot != currentSlot) {
-					draw.RoundedBox(vecPos, [32, 32], [0,0,0], g_fg_alpha * autocvar_hlhud_bucketNumAlpha );
+					DrawSlotNum(vecPos, 0);
 				}
 
 				/* draw num on top of the bg */
-				DrawSlotNum(vecPos + [8,8], currentSlot + 1);
+				DrawSlotNum(vecPos + [0, -20], currentSlot + 1);
 			} else {
 				/* draw a RT specific, faint box for every item in the other slots */
 				if (m_iWantSlot != currentSlot) {
-					draw.RoundedBox(vecPos, [32, 32], [0,0,0], g_fg_alpha * autocvar_hlhud_altBucket );
+					DrawSlotNum(vecPos, 0);
 				}
 			}
 
@@ -144,16 +168,34 @@ HLWeaponSelect::Draw(void)
 
 			/* selected slot VS unselected slot */
 			if (m_iWantSlot == currentSlot) {
+				float ammo1Percentage = (float)weapon.GetAmmo1(linkedList) / (float)weapon.MaxAmmo(linkedList);
+				float ammo2Percentage = (float)weapon.GetAmmo2(linkedList) / (float)weapon.MaxAmmo(linkedList);
 
 				if (linkedList == m_selectedWeapon) {
-					draw.TextField(vecPos + [0, 8], [112, 80], weapon.GetSelectedIcon(linkedList), FONT_WEAPONICON_SEL, 0);
-					draw.TextField(vecPos + [3, 60], [106, 14], weapon.GetTitle(linkedList), FONT_WEAPONTEXT, 0);
+					atlasPic.Draw_RGBA(atlasPic.Load(weapon.GetSelectedIcon(linkedList)), vecPos, g_fg_color * autocvar_hlhud_weaponIconSelectedAlpha, g_fg_alphaScale, true);
+					atlasPic.Draw_RGBA(g_spriteSheets[S_SELECTION], vecPos, g_fg_color * autocvar_hlhud_weaponIconSelectedAlpha, g_fg_alphaScale, true);
+
+					if (weapon.AmmoRequired(linkedList) == true) {
+						DrawBar(vecPos, ammo1Percentage);
+					}
+
+					if (weapon.UsesSecondaryAmmo(linkedList) == true) {
+						DrawBar(vecPos + [35, 0], ammo2Percentage);
+					}
 				} else {
-					draw.TextField(vecPos + [0, 8], [112, 80], weapon.GetIcon(linkedList), FONT_WEAPONICON, 0);
+					atlasPic.Draw_RGBA(atlasPic.Load(weapon.GetIcon(linkedList)), vecPos, g_fg_color * autocvar_hlhud_weaponIconAlpha, g_fg_alphaScale, true);
+
+					if (weapon.AmmoRequired(linkedList) == true) {
+						DrawBar(vecPos, ammo1Percentage);
+					}
+
+					if (weapon.UsesSecondaryAmmo(linkedList) == true) {
+						DrawBar(vecPos + [35, 0], ammo2Percentage);
+					}
 				}
-				vecPos[1] += 88;
+				vecPos[1] += 50;
 			} else {
-				vecPos[1] += 40;
+				vecPos[1] += 25;
 			}
 		}
 
@@ -164,7 +206,13 @@ HLWeaponSelect::Draw(void)
 void
 HLWeaponSelect::DrawSlotNum(vector vecPos, float fValue)
 {
-	draw.Text(vecPos, sprintf("%d", fValue), FONT_WEAPONNUM);
+	atlasPic.Draw_RGBA(
+		g_spriteSheets[S_BUCKET0 + fValue],
+		vecPos,
+		g_fg_color,
+		g_fg_alphaScale,
+		true
+	);
 }
 
 void

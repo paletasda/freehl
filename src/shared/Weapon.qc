@@ -18,8 +18,6 @@ void
 hlWeapon::hlWeapon(void)
 {
 #ifdef CLIENT
-	m_iHudSlot = 0i;
-	m_iHudSlotPos = 0i;
 	m_ammoIcon = __NULL__;
 	m_ammo2Icon = __NULL__;
 	m_crossHair = __NULL__;
@@ -63,16 +61,16 @@ hlWeapon::AddedToInventory(void)
 		m_crossHair = sprintf("%s.crosshair", strtolower(declclass));
 	}
 
-	m_icon = GetDefString("icon");
+	m_weaponHUDIcon = GetDefString("icon");
 
-	if (m_icon == "") {
-		m_icon = sprintf("%s.weapon", strtolower(declclass));
+	if (m_weaponHUDIcon == "") {
+		m_weaponHUDIcon = sprintf("%s.weapon", strtolower(declclass));
 	}
 
-	m_iconSel = GetDefString("iconSelected");
+	m_weaponHUDIconSel = GetDefString("iconSelected");
 
-	if (m_iconSel == "") {
-		m_iconSel = sprintf("%s.weapon_s", strtolower(declclass));
+	if (m_weaponHUDIconSel == "") {
+		m_weaponHUDIconSel = sprintf("%s.weapon_s", strtolower(declclass));
 	}
 
 	if (m_ammoIcon == "none") {
@@ -87,17 +85,16 @@ hlWeapon::AddedToInventory(void)
 		m_crossHair = __NULL__;
 	}
 
-	if (m_icon == "none") {
-		m_icon = __NULL__;
+	if (m_weaponHUDIcon == "none") {
+		m_weaponHUDIcon = __NULL__;
 	}
 
-	if (m_iconSel == "none") {
-		m_iconSel = __NULL__;
+	if (m_weaponHUDIconSel == "none") {
+		m_weaponHUDIconSel = __NULL__;
 	}
 
-
-	m_iHudSlot = GetDefInt("hudSlot");
-	m_iHudSlotPos = GetDefInt("hudSlotPos");
+	m_weaponHUDSlot = GetDefInt("hudSlot");
+	m_weaponHUDSlotPos = GetDefInt("hudSlotPos");
 #endif
 
 	m_bAltModeLaser = GetDefBool("altLaser");

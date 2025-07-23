@@ -35,7 +35,7 @@ entityDef monster_zombie
 
 	"mindset_idle"			"zombie_idle"
 	"mindset_combat"		"zombie_combatFace"
-	"mindset_hunt"			"zombie_searchEnemy"
+	"mindset_hunt"			"zombie_searchPlayer"
 }
 
 entityDef melee_zombie_stab
