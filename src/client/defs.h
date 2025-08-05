@@ -55,4 +55,4 @@ struct
 	float m_flTitleAlpha;
 } g_seatslocal[4], *pSeatLocal;
 
-
+font_s FONT_SCOREBOARD;

@@ -68,6 +68,10 @@ hlWeapon::AddedToInventory(void)
 	}
 
 	m_weaponHUDIconSel = GetDefString("iconSelected");
+	
+	if (!STRING_SET(m_weaponHUDIconSel)) {
+		m_weaponHUDIconSel = m_weaponHUDIcon;
+	}
 
 	if (m_weaponHUDIconSel == "") {
 		m_weaponHUDIconSel = sprintf("%s.weapon_s", strtolower(declclass));

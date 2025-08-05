@@ -1,20 +1,20 @@
 #ifdef SERVER
 class
-HLGaussBeam:ncProjectile
+hlGaussBeam:ncProjectile
 {
-	void HLGaussBeam(void);
+	void hlGaussBeam(void);
 
 	virtual void Launch(vector, vector, float, float, float);
 	nonvirtual void GaussAttack(float);
 };
 
 void
-HLGaussBeam::HLGaussBeam(void)
+hlGaussBeam::hlGaussBeam(void)
 {
 }
 
 void
-HLGaussBeam::Launch(vector startPos, vector launchDir, float fuseOffset, float powerMultiplier, float dmgMultiplier)
+hlGaussBeam::Launch(vector startPos, vector launchDir, float fuseOffset, float powerMultiplier, float dmgMultiplier)
 {
 	GaussAttack(fuseOffset);
 
@@ -27,7 +27,7 @@ HLGaussBeam::Launch(vector startPos, vector launchDir, float fuseOffset, float p
 }
 
 void
-HLGaussBeam::GaussAttack(float fuseOffset)
+hlGaussBeam::GaussAttack(float fuseOffset)
 {
 	ncPlayer ourOwner = (ncPlayer)owner;
 	int iLoop = 6i;

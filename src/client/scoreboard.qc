@@ -16,8 +16,7 @@
 
 #define SCORE_HEADER_C [255/255,156/255,0]
 #define SCORE_LINE_C [255/255,200/255,0]
-
-var int autocvar_cl_centerscores = FALSE;
+var bool autocvar_cg_centerScores = true;
 var int g_scores_teamplay = 0;
 var bool g_scores_scorepoints = false;
 
@@ -33,26 +32,25 @@ Scores_DrawTeam(ncPlayer pl, vector pos)
 {
 	drawfill(pos, [290, 1], SCORE_LINE_C, 1.0f, DRAWFLAG_ADDITIVE);
 
-	drawfont = Font_GetID(FONT_20);
-	drawstring(pos + [0,-18], "Teams", [20,20], SCORE_HEADER_C, 1.0f, DRAWFLAG_ADDITIVE);
+	draw.Text_RGBA(pos + [0,-18], "Teams", SCORE_HEADER_C, 1.0f, FONT_SCOREBOARD);
 
 	if (g_scores_scorepoints)
-		drawstring(pos + [124-32,-18], "kills / deaths / score", [20,20], SCORE_HEADER_C, 1.0f, DRAWFLAG_ADDITIVE);
+		draw.Text_RGBA(pos + [124-32,-18], "kills / deaths / score", SCORE_HEADER_C, 1.0f, FONT_SCOREBOARD);
 	else
-		drawstring(pos + [124,-18], "kills / deaths", [20,20], SCORE_HEADER_C, 1.0f, DRAWFLAG_ADDITIVE);
+		draw.Text_RGBA(pos + [124,-18], "kills / deaths", SCORE_HEADER_C, 1.0f, FONT_SCOREBOARD);
 
-	drawstring(pos + [240,-18], "latency", [20,20], SCORE_HEADER_C, 1.0f, DRAWFLAG_ADDITIVE);
+	draw.Text_RGBA(pos + [240,-18], "latency", SCORE_HEADER_C, 1.0f, FONT_SCOREBOARD);
 	
 	pos[1] += 12;
 
 	for (int t = 1; t <= serverkeyfloat("teams"); t++) {
 		float l;
 		string temp;
-		drawstring(pos, serverkey(sprintf("team_%i", t)), [20,20], SCORE_HEADER_C, 1.0f, DRAWFLAG_ADDITIVE);
+		draw.Text_RGBA(pos, serverkey(sprintf("team_%i", t)), SCORE_HEADER_C, 1.0f, FONT_SCOREBOARD);
 		temp = serverkey(sprintf("teamscore_%i", t));
-		l = stringwidth(temp, FALSE, [20,20]);
-		drawstring(pos + [150-l, 0], temp, [20,20], SCORE_HEADER_C, 1.0f, DRAWFLAG_ADDITIVE);
-		drawstring(pos + [158, 0], "wins", [20,20], SCORE_HEADER_C, 1.0f, DRAWFLAG_ADDITIVE);
+		l = font.StringWidth(temp, false, FONT_SCOREBOARD);
+		draw.Text_RGBA(pos + [150-l, 0], temp, SCORE_HEADER_C, 1.0f, FONT_SCOREBOARD);
+		draw.Text_RGBA(pos + [158, 0], "wins", SCORE_HEADER_C, 1.0f, FONT_SCOREBOARD);
 		pos[1] += 16;
 
 		for (int i = -1; i > -32; i--) {
@@ -69,69 +67,67 @@ Scores_DrawTeam(ncPlayer pl, vector pos)
 				drawfill(pos, [290, 13], [0,0,1], 0.5f, DRAWFLAG_ADDITIVE);
 			}
 
-			drawstring(pos + [24,0], getplayerkeyvalue(i, "name"), [20,20], [1,1,1], 1.0f, DRAWFLAG_ADDITIVE);
+			draw.Text_RGBA(pos + [24,0], getplayerkeyvalue(i, "name"), [1,1,1], 1.0f, FONT_SCOREBOARD);
 
 			if (g_scores_scorepoints) {
-				drawstring(pos + [154-32,0], "/", [20,20], [1,1,1], 1.0f, DRAWFLAG_ADDITIVE);
+				draw.Text_RGBA(pos + [154-32,0], "/", [1,1,1], 1.0f, FONT_SCOREBOARD);
 
 				/* Get the kills and align them left to right */
 				temp = getplayerkeyvalue(i, "frags");
-				l = stringwidth(temp, FALSE, [20,20]);
-				drawstring(pos + [150 - 32 - l,0], temp, [20,20], [1,1,1], 1.0f, DRAWFLAG_ADDITIVE);
+				l = font.StringWidth(temp, false, FONT_SCOREBOARD);
+				draw.Text_RGBA(pos + [150 - 32 - l,0], temp, [1,1,1], 1.0f, FONT_SCOREBOARD);
 				
-				drawstring(pos + [154+26,0], "/", [20,20], [1,1,1], 1.0f, DRAWFLAG_ADDITIVE);
+				draw.Text_RGBA(pos + [154+26,0], "/", [1,1,1], 1.0f, FONT_SCOREBOARD);
 
 				/* Deaths are right to left aligned */
 				temp = getplayerkeyvalue(i, "*deaths");
 				if (!temp) temp = "0";
-				l = stringwidth(temp, FALSE, [20,20]);
-				drawstring(pos + [165 - l,0], temp, [20,20], [1,1,1], 1.0f, DRAWFLAG_ADDITIVE);
+				l = font.StringWidth(temp, false, FONT_SCOREBOARD);
+				draw.Text_RGBA(pos + [165 - l,0], temp, [1,1,1], 1.0f, FONT_SCOREBOARD);
 
 				/* Deaths are right to left aligned */
 				temp = getplayerkeyvalue(i, "*score");
 				if (!temp) temp = "0";
-				drawstring(pos + [165+32,0], temp, [20,20], [1,1,1], 1.0f, DRAWFLAG_ADDITIVE);
+				draw.Text_RGBA(pos + [165+32,0], temp, [1,1,1], 1.0f, FONT_SCOREBOARD);
 			} else {
-				drawstring(pos + [154,0], "/", [20,20], [1,1,1], 1.0f, DRAWFLAG_ADDITIVE);
+				draw.Text_RGBA(pos + [154,0], "/", [1,1,1], 1.0f, FONT_SCOREBOARD);
 
 				/* Get the kills and align them left to right */
 				temp = getplayerkeyvalue(i, "frags");
-				l = stringwidth(temp, FALSE, [20,20]);
-				drawstring(pos + [150 - l,0], temp, [20,20], [1,1,1], 1.0f, DRAWFLAG_ADDITIVE);
+				l = font.StringWidth(temp, false, FONT_SCOREBOARD);
+				draw.Text_RGBA(pos + [150 - l,0], temp, [1,1,1], 1.0f, FONT_SCOREBOARD);
 
 				/* Deaths are right to left aligned */
 				temp = getplayerkeyvalue(i, "*deaths");
-				drawstring(pos + [165,0], temp, [20,20], [1,1,1], 1.0f, DRAWFLAG_ADDITIVE);
+				draw.Text_RGBA(pos + [165,0], temp, [1,1,1], 1.0f, FONT_SCOREBOARD);
 			}
 
 			vector tmpColor;
 			temp = getplayerkeyvalue(i, "*icon1");
-			if (temp) {
+			if (STRING_SET(temp)) {
 				tmpColor[0] = getplayerkeyfloat(i, "*icon1_r");
 				tmpColor[1] = getplayerkeyfloat(i, "*icon1_g");
 				tmpColor[2] = getplayerkeyfloat(i, "*icon1_b");
-				ncInterfaceSpriteSheet::Draw_RGB(temp, pos - [8, 0], tmpColor, true);
+				atlasPic.Draw_RGB(atlasPic.Load(temp), pos - [8, 0], tmpColor, true);
 			}
 
 			temp = getplayerkeyvalue(i, "*icon2");
-			if (temp) {
+			if (STRING_SET(temp)) {
 				tmpColor[0] = getplayerkeyfloat(i, "*icon2_r");
 				tmpColor[1] = getplayerkeyfloat(i, "*icon2_g");
 				tmpColor[2] = getplayerkeyfloat(i, "*icon2_b");
-				ncInterfaceSpriteSheet::Draw_RGB(temp, pos + [8, 0], tmpColor, true);
+				atlasPic.Draw_RGB(atlasPic.Load(temp), pos + [8, 0], tmpColor, true);
 			}
 
 			/* Get the latency and align it left to right */
 			temp = getplayerkeyvalue(i, "ping");
-			l = stringwidth(temp, FALSE, [20,20]);
+			l = font.StringWidth(temp, false, FONT_SCOREBOARD);
 
-			drawstring(pos + [290 - l,0], temp, [20,20], [1,1,1], 1.0f, DRAWFLAG_ADDITIVE);
+			draw.Text_RGBA(pos + [290 - l,0], temp, [1,1,1], 1.0f, FONT_SCOREBOARD);
 			pos[1] += 20;
 		}
 		pos[1] += 12;
 	}
-	
-	drawfont = Font_GetID(FONT_CON);
 }
 
 void
@@ -139,10 +135,9 @@ Scores_DrawNormal(ncPlayer pl, vector pos)
 {
 	drawfill(pos, [290, 1], SCORE_LINE_C, 1.0f, DRAWFLAG_ADDITIVE);
 
-	drawfont = Font_GetID(FONT_20);
-	drawstring(pos + [0,-18], "Player", [20,20], SCORE_HEADER_C, 1.0f, DRAWFLAG_ADDITIVE);
-	drawstring(pos + [124,-18], "kills / deaths", [20,20], SCORE_HEADER_C, 1.0f, DRAWFLAG_ADDITIVE);
-	drawstring(pos + [240,-18], "latency", [20,20], SCORE_HEADER_C, 1.0f, DRAWFLAG_ADDITIVE);
+	draw.Text_RGBA(pos + [0,-18], "Player", SCORE_HEADER_C, 1.0f, FONT_SCOREBOARD);
+	draw.Text_RGBA(pos + [124,-18], "kills / deaths", SCORE_HEADER_C, 1.0f, FONT_SCOREBOARD);
+	draw.Text_RGBA(pos + [240,-18], "latency", SCORE_HEADER_C, 1.0f, FONT_SCOREBOARD);
 	
 	pos[1] += 12;
 	for (int i = -1; i > -32; i--) {
@@ -165,27 +160,25 @@ Scores_DrawNormal(ncPlayer pl, vector pos)
 			drawfill(pos, [290, 13], [0,0,1], 0.5f, DRAWFLAG_ADDITIVE);
 		}
 
-		drawstring(pos, getplayerkeyvalue(i, "name"), [20,20], [1,1,1], 1.0f, DRAWFLAG_ADDITIVE);
-		drawstring(pos + [154,0], "/", [20,20], [1,1,1], 1.0f, DRAWFLAG_ADDITIVE);
+		draw.Text_RGBA(pos, getplayerkeyvalue(i, "name"), [1,1,1], 1.0f, FONT_SCOREBOARD);
+		draw.Text_RGBA(pos + [154,0], "/", [1,1,1], 1.0f, FONT_SCOREBOARD);
 
 		/* Get the kills and align them left to right */
 		kills = getplayerkeyvalue(i, "frags");
-		l = stringwidth(kills, FALSE, [20,20]);
-		drawstring(pos + [150 - l,0], kills, [20,20], [1,1,1], 1.0f, DRAWFLAG_ADDITIVE);
+		l = font.StringWidth(kills, false, FONT_SCOREBOARD);
+		draw.Text_RGBA(pos + [150 - l,0], kills, [1,1,1], 1.0f, FONT_SCOREBOARD);
 
 		/* Deaths are right to left aligned */
 		deaths = getplayerkeyvalue(i, "*deaths");
-		drawstring(pos + [165,0], deaths, [20,20], [1,1,1], 1.0f, DRAWFLAG_ADDITIVE);
+		draw.Text_RGBA(pos + [165,0], deaths, [1,1,1], 1.0f, FONT_SCOREBOARD);
 
 		/* Get the latency and align it left to right */
 		ping = getplayerkeyvalue(i, "ping");
-		l = stringwidth(ping, FALSE, [20,20]);
+		l = font.StringWidth(ping, false, FONT_SCOREBOARD);
 
-		drawstring(pos + [290 - l,0], ping, [20,20], [1,1,1], 1.0f, DRAWFLAG_ADDITIVE);
+		draw.Text_RGBA(pos + [290 - l,0], ping, [1,1,1], 1.0f, FONT_SCOREBOARD);
 		pos[1] += 20;
 	}
-	
-	drawfont = Font_GetID(FONT_CON);
 }
 
 void
@@ -193,20 +186,42 @@ Scores_Draw(void)
 {
 	vector pos;
 	ncPlayer pl;
-
+	
 	pl = (ncPlayer)pSeat->m_ePlayer;
+	int teamCount = teams.TeamCount();
+	int c = 6i;
 
-	if (autocvar_cl_centerscores) {
-		int c = 10;
-		
-		/* calculate all valid entries */
-		for (int i = -1; i > -32; i--) {
-			if (getplayerkeyvalue(i, "name") && getplayerkeyfloat(i, "*spec") != 1) {
+	if (autocvar_cg_centerScores) {
+		if (teamCount > 0i) {
+			for (int t = 1; t <= serverkeyfloat("teams"); t++) {
+				c += 16;
+
+				for (int i = -1; i > -32; i--) {
+					string playerName = getplayerkeyvalue(i, "name");
+
+					if (getplayerkeyfloat(i, "*team") != t) {
+						continue;
+					}
+
+					/* Out of players */
+					if (!STRING_SET(playerName)) {
+						break;
+					}
+					c += 10;
+				}
+				c += 6;
+			}
+		} else {
+			for (int i = -1; i > -32; i--) {
+				string playerName = getplayerkeyvalue(i, "name");
+
+				if (!STRING_SET(playerName)) {
+					break;
+				}
+
 				c += 10;
 			}
 		}
-
-		c += (serverkeyfloat("teams") * 10);
 		pos = video_mins + [(g_vidsize[0] / 2) - 145, (g_vidsize[1] / 2) - c];
 	} else {
 		pos = video_mins + [(g_vidsize[0] / 2) - 145, 30];
