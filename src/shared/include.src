@@ -7,6 +7,6 @@
 ../../../valve/src/shared/fx_gaussbeam.qc
 ../../../valve/src/shared/GaussBeam.qc
 ../../../valve/src/shared/Weapon.qc
-../../../valve/src/shared/w_tripmine.qc
+../../../valve/src/shared/Tripmine.qc
 ../../../valve/src/shared/HUDCounter.qc
 #endlist

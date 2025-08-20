@@ -112,6 +112,7 @@ hlPlayer::UpdatePlayerAttachments(bool visible)
 			p = dynamiclight_add(src + (v_forward * 16), 512, [1,1,1], 0, "lights/flashlight");
 			dynamiclight_set(p, LFIELD_ANGLES, ang);
 			dynamiclight_set(p, LFIELD_FLAGS, 3);
+			dynamiclight_set(p, LFIELD_OWNER, this);
 		}
 
 		dynamiclight_set(p, LFIELD_STYLE, 64);
@@ -250,7 +251,7 @@ hlPlayer::Death(entity inflictor, entity attacker, int damagePoints, vector dir,
 		MakeCorpse(deathAnimation);
 	}
 	
-	super::Death(inflictor,  attacker,  damagePoints,  dir, absImpactPos, hitBody);
+	ncPlayer::Death(inflictor,  attacker,  damagePoints,  dir, absImpactPos, hitBody);
 }
 
 

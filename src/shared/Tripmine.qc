@@ -14,59 +14,12 @@
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-enum
-{
-	TRIPMINE_IDLE1,
-	TRIPMINE_IDLE2,
-	TRIPMINE_FIRE1,
-	TRIPMINE_FIRE2,
-	TRIPMINE_FIDGET,
-	TRIPMINE_HOLSTER,
-	TRIPMINE_DRAW,
-	TRIPMINE_WORLD,
-	TRIPMINE_GROUND,
-};
-
-/* MONSTER_TRIPMINE SEGMENT 
- * 
- * Because not being able to place it around levels would be boring.
- * Some maps, such as subtransit and a few singleplayer chapters have this. */
-
-class hlTripmine:ncSurfacePropEntity
-{
-	void hlTripmine(void);
-
-#ifdef SERVER
-	virtual void Respawn(void);
-	virtual void Spawned(void);
-	virtual void Ready(void);
-	virtual void Pain(entity, entity, int, vector, vector, int);
-	virtual void Death(entity, entity, int, vector, vector, int);
-	virtual float SendEntity(entity, float);
-#endif
-
-#ifdef CLIENT
-	virtual float predraw(void);
-	virtual void ReceiveEntity(float, float);
-#endif
-
-private:
-
-	vector m_vecEndPos;
-
-#ifdef CLIENT
-	int m_iActive;
-#endif
-};
-
 void
 hlTripmine::hlTripmine(void)
 {
+	m_vecEndPos = g_vec_null;
+
 #ifdef CLIENT
-	solid = SOLID_BBOX;
-	movetype = MOVETYPE_NONE;
-	drawmask = MASK_ENGINE;
-	frame = TRIPMINE_WORLD;
 	m_iActive = FALSE;
 #endif
 }
@@ -76,6 +29,7 @@ void
 hlTripmine::Respawn(void)
 {
 	super::Respawn();
+
 	RestoreAngles();
 }
 
@@ -112,7 +66,13 @@ hlTripmine::Death(entity inflictor, entity attacker, int damage, vector dir, vec
 
 	combat.RadiusDamage(explosionPos, explosionRadius, 0i, (int)explosionDamage, attacker, "");
 	StartSoundDef("fx.explosion", CHAN_VOICE, true);
-	Destroy();
+
+	if (CreatedByMap() == true) {
+		Disappear();
+		ReleaseThink();
+	} else {
+		Destroy();
+	}
 }
 
 void
@@ -124,7 +84,7 @@ hlTripmine::Pain(entity inflictor, entity attacker, int damage, vector dir, vect
 void
 hlTripmine::Ready(void)
 {
-	traceline(origin, origin + GetForward() * 2048, FALSE, this);
+	traceline(GetOrigin(), GetOrigin() + (GetForward() * 2048.0f), MOVE_NORMAL, this);
 
 	/* first time we're marked as ready, we play a sound and set the distance */
 	if (takedamage == DAMAGE_NO) {
@@ -144,14 +104,19 @@ hlTripmine::Ready(void)
 	}
 
 	/* run this method again next frame */
-	ScheduleThink(Ready, 0.0f);
+	ScheduleThink(Ready, 0.1f);
 }
 
 float
 hlTripmine::SendEntity(entity ePEnt, float flChanged)
 {
+	if (!modelindex) {
+		return (false);
+	}
+
 	WriteByte(MSG_ENTITY, ENT_TRIPMINE);
 	WriteFloat(MSG_ENTITY, flChanged);
+	WriteShort(MSG_ENTITY, modelindex);
 	WriteCoord(MSG_ENTITY, origin[0]);
 	WriteCoord(MSG_ENTITY, origin[1]);
 	WriteCoord(MSG_ENTITY, origin[2]);
@@ -162,7 +127,7 @@ hlTripmine::SendEntity(entity ePEnt, float flChanged)
 	WriteCoord(MSG_ENTITY, m_vecEndPos[1]);
 	WriteCoord(MSG_ENTITY, m_vecEndPos[2]);
 	WriteByte(MSG_ENTITY, health);
-	return (1);
+	return (true);
 }
 #endif
 
@@ -170,22 +135,26 @@ hlTripmine::SendEntity(entity ePEnt, float flChanged)
 void
 hlTripmine::ReceiveEntity(float flNew, float flChanged)
 {
-	this.origin[0] = readcoord();
-	this.origin[1] = readcoord();
-	this.origin[2] = readcoord();
-	this.angles[0] = readcoord();
-	this.angles[1] = readcoord();
-	this.angles[2] = readcoord();
-	this.m_vecEndPos[0] = readcoord();
-	this.m_vecEndPos[1] = readcoord();
-	this.m_vecEndPos[2] = readcoord();
-	this.m_iActive = readbyte();
-
-	setmodel(this, "models/v_tripmine.mdl");
+	modelindex = readshort();
+	origin[0] = readcoord();
+	origin[1] = readcoord();
+	origin[2] = readcoord();
+	angles[0] = readcoord();
+	angles[1] = readcoord();
+	angles[2] = readcoord();
+	m_vecEndPos[0] = readcoord();
+	m_vecEndPos[1] = readcoord();
+	m_vecEndPos[2] = readcoord();
+	m_iActive = readbyte();
 
 	setcustomskin(this, "", "geomset 0 2\ngeomset 1 2\n");
 	SetSize([-8,-8,-8], [8,8,8]);
 	Relink();
+
+	solid = SOLID_BBOX;
+	movetype = MOVETYPE_NONE;
+	frame = TRIPMINE_WORLD;
+	drawmask = MASK_ENGINE;
 }
 
 float

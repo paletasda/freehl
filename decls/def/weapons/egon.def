@@ -31,6 +31,7 @@ entityDef weapon_egon
 	"act_idle"			"$EGON_IDLE,$EGON_FIDGET"
 	"act_draw"			"$EGON_DRAW"
 	"act_loop"			"$EGON_FIRE1,$EGON_FIRE2,$EGON_FIRE3,$EGON_FIRE4"
+	"act_fireStart"			"$EGON_FIRE4"
 	"act_fireStop"		"$EGON_FIDGET"
 	"act_holster"		"$EGON_HOLSTER"
 	"fireRate"			"0.2"

@@ -44,4 +44,6 @@ ClientGame_RendererRestart(string rstr)
 	FX_GaussBeam_Init();
 	BEAM_TRIPMINE = particleeffectnum("weapon_tripmine.beam");
 	font.Load("fonts/scoreboard.font", FONT_SCOREBOARD);
+	font.Load("fonts/scores_norm.font", FONT_SCORES_NORMAL);
+	font.Load("fonts/scores_bold.font", FONT_SCORES_BOLD);
 }
