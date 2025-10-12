@@ -164,10 +164,6 @@ hlWeapon::UpdateGUI(void)
 		HLSprite_Draw_RGBA(m_ammoIcon, ammoPos, g_hud_color, pSeatLocal->m_flAmmo2Alpha, true);
 	}
 
-	if (FireInfoSelected() && m_bAltModeLaser) {
-		DrawLaser();
-	}
-
 #if 1
 	vector vSize = [540,16];
 	vector vMainPos;
@@ -195,32 +191,5 @@ hlWeapon::UpdateGUI(void)
 	}
 #endif
 #endif
-}
-
-void
-hlWeapon::DrawLaser(void)
-{
-	ncPlayer ourOwner = (ncPlayer)GetOwner();
-	float lerpValue;
-	vector laser_pos = g_vec_null;
-	vector jitter = [0.0f, 0.0f, 0.0f];
-
-	vector src = ourOwner.GetEyePos();
-	traceline(src, src + (anglesToForward(ourOwner.v_angle) * 256), FALSE, ourOwner);
-	lerpValue = lerp(18,6, trace_fraction);
-	jitter[0] = (random(0,2) - 2) * (1 - trace_fraction);
-	jitter[1] = (random(0,2) - 2) * (1 - trace_fraction);
-	laser_pos = g_hudmins + (g_hudres / 2) + ([-lerpValue,-lerpValue] / 2);
-
-	drawsubpic(
-		laser_pos + jitter,
-		[lerpValue,lerpValue],
-		g_laser_spr,
-		[0,0],
-		[1.0, 1.0],
-		[1,1,1],
-		1.0f,
-		DRAWFLAG_ADDITIVE
-	);
 }
 #endif

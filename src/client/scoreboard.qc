@@ -98,7 +98,7 @@ Scores_Draw(void)
 	string selfName = getplayerkeyvalue(pl.entnum-1, "name");
 	float playerTextHeight = font.GetHeight(FONT_SCORES_BOLD);
 	float playerStackSize = playerTextHeight + 4;
-	float playerTextOffset;
+	float playerTextOffset = 0.0f;
 	
 	pos = hostlinePos + [0, 6];
 
@@ -130,7 +130,6 @@ Scores_Draw(void)
 
 	if (Util_IsTeamplay()) {
 		for (int t = 1; t <= serverkeyfloat("teams"); t++) {
-			float l;
 			vector teamColor = teams.Color(t);
 			int playerCount = teams.NumPlayers(t);
 			

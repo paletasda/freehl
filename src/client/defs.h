@@ -21,16 +21,9 @@
 
 var int autocvar_cl_autoweaponswitch = TRUE;
 
-vector g_hud_color;
 vector g_hudmins;
 vector g_hudres;
 
-var string g_laser_spr;
-
-/* muzzleflash indices */
-var int MUZZLE_SMALL;
-var int MUZZLE_RIFLE;
-var int MUZZLE_WEIRD;
 
 struct
 {

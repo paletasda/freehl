@@ -47,7 +47,6 @@ public:
 
 #ifdef CLIENT
 	virtual void UpdateGUI(void);
-	nonvirtual void DrawLaser(void);
 #endif
 
 private:

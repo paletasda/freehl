@@ -233,6 +233,7 @@ HUD_Init(void)
 	}
 
 	weaponSelectionHUD = spawn(HLWeaponSelect);
+	g_spriteCrosshair = -1i;
 }
 
 void
@@ -409,6 +410,8 @@ HLHUD_DrawObituaries(vector drawAtPos, bool rightAlign)
 		return;
 	}
 
+	drawAtPos += g_hudMins;
+
 	for (int i = 0i; i < g_killMsgCount; i++) {
 		float m_ofs1 = font.StringWidth(g_killMsgRecord[i].m_target, true, FONT_CHAT);
 		float m_ofs2 = atlasPic.GetWidth(g_killMsgRecord[i].m_icon);
@@ -541,7 +544,7 @@ HUD_Draw(void)
 			vector screenSize = screen.Size();
 			vector finalColor = [1,1,1];
 			finalColor[1] = finalColor[2] = 1.0 - (g_damageAlpha * autocvar_cg_damageFill);
-			draw.Pic(hud_mins, "fade_modulate", screenSize, finalColor, 1.0, DRAWFLAG_NORMAL);
+			draw.Pic(screen.Mins(), "fade_modulate", screenSize, finalColor, 1.0, DRAWFLAG_NORMAL);
 		}
 
 		g_damageAlpha -= clframetime;

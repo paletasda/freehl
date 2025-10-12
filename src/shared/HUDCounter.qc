@@ -16,8 +16,6 @@
 
 #define HLHUD_SPRITES 61i
 int g_spriteSheets[HLHUD_SPRITES];
-int g_spriteAmmoIcon;
-int g_spriteCrosshair;
 
 typedef enum
 {
@@ -417,7 +415,7 @@ hlHUDCounter::postdraw(void)
 			drawpic(vecProj, m_strIcon, [64, 64], [1,1,1], a, DRAWFLAG_ADDITIVE);
 		}
 	} else {
-		ncInterfaceSpriteSheet::Draw_RGBA(m_strIcon, vecProj, colormod / 255, a, m_bAdditive);
+		//ncInterfaceSpriteSheet::Draw_RGBA(m_strIcon, vecProj, colormod / 255, a, m_bAdditive);
 	}
 
 	/* counter */
